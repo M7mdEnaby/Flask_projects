@@ -1,0 +1,160 @@
+Flask-based Person Management API
+This project is a simple API built using Flask, allowing for basic CRUD (Create, Read, Update, Delete) operations on a dataset of persons. Each person in the dataset is uniquely identified by a UUID and has information like first name, last name, graduation year, address, and more.
+
+Features
+Fetch the count of persons in the dataset
+Search for persons by UUID or by first name
+Add a new person to the dataset
+Delete a person by their UUID
+Error handling for invalid requests and routes
+Table of Contents
+Features
+Installation
+Running the Project
+API Endpoints
+GET /count
+GET /data
+GET /name_search
+GET /person/<uuid>
+POST /person
+DELETE /person/<uuid>
+Error Handling
+Installation
+Clone the repository:
+
+
+
+git clone <repository-url>
+cd <repository-directory>
+Create a virtual environment:
+
+
+
+python3 -m venv venv
+source venv/bin/activate   # On Windows: venv\Scripts\activate
+Install the required dependencies:
+
+
+
+pip install -r requirements.txt
+Run the Flask app:
+
+
+
+export FLASK_APP=app.py     # On Windows: set FLASK_APP=app.py
+flask run
+The application will start and be available at http://localhost:5000.
+
+Running the Project
+Once the Flask server is running, you can interact with the API through the browser or tools like curl or Postman.
+
+To run the app:
+
+
+
+flask run
+The API will be available at http://localhost:5000.
+
+API Endpoints
+GET /count
+Returns the total count of persons in the dataset.
+
+URL: /count
+Method: GET
+Response:
+Status: 200 OK
+Body: {"count": <number of persons>}
+GET /data
+Returns a message about the size of the dataset.
+
+URL: /data
+Method: GET
+Response:
+Status: 200 OK (if data is available)
+Body: {"message": "Data of length <length> found"}
+GET /name_search
+Searches for persons by their first name. You need to pass the search query as a URL parameter q.
+
+URL: /name_search?q=<first_name>
+Method: GET
+Response:
+Status: 200 OK (if a match is found)
+Body: {"first_name": "Tanya", "last_name": "Slad", ...} (The full details of the matched person)
+Status: 404 Not Found if no match is found.
+Example:
+
+
+
+curl -X GET "http://localhost:5000/name_search?q=Tanya"
+GET /person/<uuid>
+Fetches details of a person using their UUID.
+
+URL: /person/<uuid>
+Method: GET
+Response:
+Status: 200 OK if the person is found.
+Status: 404 Not Found if no match is found.
+Example:
+
+curl -X GET "http://localhost:5000/person/<uuid>"
+POST /person
+Adds a new person to the dataset. You need to send a JSON object with the person's details in the request body.
+
+URL: /person
+Method: POST
+Request Body:
+
+
+{
+  "id": "uuid",
+  "first_name": "John",
+  "last_name": "Doe",
+  "graduation_year": 2000,
+  "address": "123 Main St",
+  "city": "Some City",
+  "zip": "12345",
+  "country": "United States",
+  "avatar": "http://example.com/avatar.png"
+}
+Response:
+Status: 201 Created if the person is successfully added.
+Status: 404 Not Found if the person is already in the dataset.
+Example:
+
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+  "id": "new-uuid",
+  "first_name": "John",
+  "last_name": "Doe",
+  "graduation_year": 2000,
+  "address": "123 Main St",
+  "city": "Some City",
+  "zip": "12345",
+  "country": "United States",
+  "avatar": "http://example.com/avatar.png"
+}' http://localhost:5000/person
+DELETE /person/<uuid>
+Deletes a person from the dataset using their UUID.
+
+URL: /person/<uuid>
+Method: DELETE
+Response:
+Status: 200 OK if the person is successfully deleted.
+Status: 404 Not Found if the person is not found.
+Example:
+
+
+
+curl -X DELETE "http://localhost:5000/person/<uuid>"
+Error Handling
+The API includes custom error handling for 404 errors and invalid input parameters.
+
+If a person is not found or an invalid UUID is provided, the API will return:
+
+Status: 404 Not Found
+Response: {"message": "person not found"}
+If the API route is not found, the response will be:
+
+Status: 404 Not Found
+Response: {"message": "API not found"}
